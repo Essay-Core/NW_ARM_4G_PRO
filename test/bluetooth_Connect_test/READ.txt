@@ -1,0 +1,5 @@
+sudo sdptool add --channel=22 SP
+sudo rfcomm listen /dev/rfcomm1 22
+
+gcc rfcomm.c -o test -lbluetooth
+sudo ./test

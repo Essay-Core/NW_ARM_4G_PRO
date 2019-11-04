@@ -1,0 +1,6 @@
+[INFO ] 20191101_094925 main:467 -| Create th_RDWR thread success!
+    4: /mnt/hgfs/3288/NW_ARM_4G_PRO/src/exe() [0x40a10f]
+    3: /mnt/hgfs/3288/NW_ARM_4G_PRO/src/exe() [0x40a5ba]
+    2: /mnt/hgfs/3288/NW_ARM_4G_PRO/src/exe() [0x4034bd]
+    1: /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf5) [0x7ffff70dcf45]
+    0: /mnt/hgfs/3288/NW_ARM_4G_PRO/src/exe() [0x402469]

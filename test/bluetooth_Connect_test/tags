@@ -1,0 +1,41 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+_GNU_SOURCE	rfcomm.c	28;"	d	file:
+__io_canceled	rfcomm.c	/^static volatile sig_atomic_t __io_canceled = 0;$/;"	v	file:
+alt	rfcomm.c	/^	char *alt;$/;"	m	struct:__anon1	file:
+auth	rfcomm.c	/^static int auth = 0;$/;"	v	file:
+cmd	rfcomm.c	/^	char *cmd;$/;"	m	struct:__anon1	file:
+cmd_connect	rfcomm.c	/^static void cmd_connect(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)$/;"	f	file:
+cmd_create	rfcomm.c	/^static void cmd_create(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)$/;"	f	file:
+cmd_listen	rfcomm.c	/^static void cmd_listen(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)$/;"	f	file:
+cmd_release	rfcomm.c	/^static void cmd_release(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)$/;"	f	file:
+cmd_show	rfcomm.c	/^static void cmd_show(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)$/;"	f	file:
+cmd_watch	rfcomm.c	/^static void cmd_watch(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)$/;"	f	file:
+command	rfcomm.c	/^} command[] = {$/;"	v	typeref:struct:__anon1
+create_all	rfcomm.c	/^static int create_all(int ctl)$/;"	f	file:
+create_dev	rfcomm.c	/^static int create_dev(int ctl, int dev, uint32_t flags, bdaddr_t *bdaddr, int argc, char **argv)$/;"	f	file:
+doc	rfcomm.c	/^	char *doc;$/;"	m	struct:__anon1	file:
+encryption	rfcomm.c	/^static int encryption = 0;$/;"	v	file:
+func	rfcomm.c	/^	void (*func)(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv);$/;"	m	struct:__anon1	file:
+linger	rfcomm.c	/^static int linger = 0;$/;"	v	file:
+main	rfcomm.c	/^int main(int argc, char *argv[])$/;"	f
+main_options	rfcomm.c	/^static struct option main_options[] = {$/;"	v	typeref:struct:option	file:
+master	rfcomm.c	/^static int master = 0;$/;"	v	file:
+opt	rfcomm.c	/^	char *opt;$/;"	m	struct:__anon1	file:
+print_dev_info	rfcomm.c	/^static void print_dev_info(struct rfcomm_dev_info *di)$/;"	f	file:
+print_dev_list	rfcomm.c	/^static void print_dev_list(int ctl, int flags)$/;"	f	file:
+release_all	rfcomm.c	/^static int release_all(int ctl)$/;"	f	file:
+release_dev	rfcomm.c	/^static int release_dev(int ctl, int dev, uint32_t flags)$/;"	f	file:
+rfcomm_config_file	rfcomm.c	/^static char *rfcomm_config_file = NULL;$/;"	v	file:
+rfcomm_flagstostr	rfcomm.c	/^static char *rfcomm_flagstostr(uint32_t flags)$/;"	f	file:
+rfcomm_raw_tty	rfcomm.c	/^static int rfcomm_raw_tty = 0;$/;"	v	file:
+rfcomm_state	rfcomm.c	/^static char *rfcomm_state[] = {$/;"	v	file:
+run_cmdline	rfcomm.c	/^static void run_cmdline(struct pollfd *p, sigset_t* sigs, char *devname,$/;"	f	file:
+secure	rfcomm.c	/^static int secure = 0;$/;"	v	file:
+sig_hup	rfcomm.c	/^static void sig_hup(int sig)$/;"	f	file:
+sig_term	rfcomm.c	/^static void sig_term(int sig)$/;"	f	file:
+usage	rfcomm.c	/^static void usage(void)$/;"	f	file:

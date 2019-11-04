@@ -1,0 +1,102 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Bandwidth	main - 副本.cc	/^int Bandwidth[6] ={6,15,25,50,75,100};$/;"	v
+Bandwidth	main.c	/^int Bandwidth[6] ={6,15,25,50,75,100};$/;"	v
+Bandwidth	stDecodeSIB.c	/^int Bandwidth[6] ={6,15,25,50,75,100};$/;"	v
+CellScan	main.c	/^typedef struct CellScan $/;"	s	file:
+CellScan	stDecodeSIB.h	/^typedef struct CellScan $/;"	s
+DecodeSIBMeg	main.c	/^int DecodeSIBMeg()$/;"	f
+DecodeSIBMesg	stDecodeSIB.c	/^int DecodeSIBMesg()$/;"	f
+ExtraData	main - 副本.cc	/^int ExtraData(int bit_pos, int bitsize)$/;"	f
+ExtraData	main.c	/^int ExtraData(int bit_pos, int bitsize)$/;"	f
+ExtraData	stDecodeSIB.c	/^int ExtraData(int bit_pos, int bitsize)$/;"	f
+Mac_msg	main.c	/^typedef struct Mac_msg$/;"	s	file:
+Mac_msg	stDecodeSIB.h	/^typedef struct Mac_msg$/;"	s
+PLMN_Identity	main - 副本.cc	/^int PLMN_Identity[6][2];\/\/0用于存储mcc；1用于存储mnc$/;"	v
+SIB_sib1	main - 副本.cc	/^int SIB_sib1()$/;"	f
+SIB_sib2	main - 副本.cc	/^int SIB_sib2()$/;"	f
+SIB_sib3	main - 副本.cc	/^int SIB_sib3()$/;"	f
+SIB_sib4	main - 副本.cc	/^int SIB_sib4()$/;"	f
+SIB_sib5	main - 副本.cc	/^int SIB_sib5()$/;"	f
+__STDECODESIB_H	stDecodeSIB.h	2;"	d
+cid	main.c	/^	uint32 cid;			 \/\/基站识别码$/;"	m	struct:CellScan	file:
+cid	stDecodeSIB.h	/^	uint32 cid;			 \/\/基站识别码$/;"	m	struct:CellScan
+crcstat	main.c	/^	unsigned short crcstat;\/\/PDU解码可信度$/;"	m	struct:Mac_msg	file:
+crcstat	stDecodeSIB.h	/^	unsigned short crcstat;\/\/PDU解码可信度$/;"	m	struct:Mac_msg
+data_p	main - 副本.cc	/^uint8 data_p[] = {0x00,0x00,0x06,0x0F,0xD6,0xC8,0x16,0x0C,0x00,0x2A,0x00,0x20,0x01,0x41,0x00,0x00,0x29,0xAA,0x55,0x69,0x6D,0x0C,0x72,0x94,0x4C,0x1C,0x00};$/;"	v
+data_p	main.c	/^uint8 data_p[] = {0x00,0x0F,0x54,0x4C,0xB5,0x91,0xA9,0x52,0xD3,0xA2,0x25,0x03,0x08,0x27,0x2D,0x64,0x44,0xA6,0x91,0x04,0xE5,0xAC,0x88,0x98,0x26,0x20,0x9C,0xB5,0x91,0x13,0x1D,0x84,0x13,0x96,0xB2,0x22,0x58,0x00,0x82,0x72,0xD4,0x40,0xA3,0xAB,0x00,0x10,0x03,0x84,0x31,0x5A,0xE9,0x00,0x10,0x03,0xE8,0x31,0x5A,0xD9,0x00,0x10,0x0B,0xB8,0x31,0x5A,0xC9,0x00,0x10,0x0C,0xE4,0x31,0x5A,0xE9,0x00,0x00,0x00};$/;"	v
+data_p	stDecodeSIB.c	/^uint8 data_p[] = {0x00,0x0F,0x54,0x4C,0xB5,0x91,0xA9,0x52,0xD3,0xA2,0x25,0x03,0x08,0x27,0x2D,0x64,0x44,0xA6,0x91,0x04,0xE5,0xAC,0x88,0x98,0x26,0x20,0x9C,0xB5,0x91,0x13,0x1D,0x84,0x13,0x96,0xB2,0x22,0x58,0x00,0x82,0x72,0xD4,0x40,0xA3,0xAB,0x00,0x10,0x03,0x84,0x31,0x5A,0xE9,0x00,0x10,0x03,0xE8,0x31,0x5A,0xD9,0x00,0x10,0x0B,0xB8,0x31,0x5A,0xC9,0x00,0x10,0x0C,0xE4,0x31,0x5A,0xE9,0x00,0x00,0x00};$/;"	v
+earfn	main.c	/^	unsigned short earfn;\/\/频点号$/;"	m	struct:CellScan	file:
+earfn	main.c	/^	unsigned short earfn;\/\/频点号$/;"	m	struct:Mac_msg	file:
+earfn	stDecodeSIB.h	/^	unsigned short earfn;\/\/频点号$/;"	m	struct:CellScan
+earfn	stDecodeSIB.h	/^	unsigned short earfn;\/\/频点号$/;"	m	struct:Mac_msg
+info_sib	main - 副本.cc	/^int info_sib[32][2];\/\/0存储重复周期，1存储sib类型$/;"	v
+info_sib	main.c	/^int info_sib[32][2];\/\/0存储重复周期，1存储sib类型$/;"	v
+info_sib	stDecodeSIB.c	/^int info_sib[32][2];\/\/0存储重复周期，1存储sib类型$/;"	v
+main	main - 副本.cc	/^int main()$/;"	f
+main_test_sib1	main.c	/^int main_test_sib1()$/;"	f
+main_test_sib1	stDecodeSIB.c	/^int main_test_sib1()$/;"	f
+main_test_sib2	main - 副本.cc	/^int main_test_sib2()$/;"	f
+main_test_sib2	main.c	/^int main_test_sib2()$/;"	f
+main_test_sib2	stDecodeSIB.c	/^int main_test_sib2()$/;"	f
+main_test_sib3	main - 副本.cc	/^int main_test_sib3()$/;"	f
+main_test_sib3	main.c	/^int main_test_sib3()$/;"	f
+main_test_sib3	stDecodeSIB.c	/^int main_test_sib3()$/;"	f
+main_test_sib4	main - 副本.cc	/^int main_test_sib4()$/;"	f
+main_test_sib4	main.c	/^int main_test_sib4()$/;"	f
+main_test_sib4	stDecodeSIB.c	/^int main_test_sib4()$/;"	f
+main_test_sib5	main - 副本.cc	/^int main_test_sib5()$/;"	f
+main_test_sib5	main.c	/^int main_test_sib5()$/;"	f
+main_test_sib5	stDecodeSIB.c	/^int main_test_sib5()$/;"	f
+main_test_sib_ALL	main - 副本.cc	/^int main_test_sib_ALL()$/;"	f
+mask	main - 副本.cc	/^unsigned char mask[8] ={0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};$/;"	v
+mask	main.c	/^unsigned char mask[8] ={0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};$/;"	v
+mask	stDecodeSIB.c	/^unsigned char mask[8] ={0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};$/;"	v
+msgaddr	main.c	/^	unsigned char *msgaddr;\/\/PDU存放地址$/;"	m	struct:Mac_msg	file:
+msgaddr	stDecodeSIB.h	/^	unsigned char *msgaddr;\/\/PDU存放地址$/;"	m	struct:Mac_msg
+msgbliten	main.c	/^	unsigned short msgbliten;\/\/有效数据bit长度$/;"	m	struct:Mac_msg	file:
+msgbliten	stDecodeSIB.h	/^	unsigned short msgbliten;\/\/有效数据bit长度$/;"	m	struct:Mac_msg
+pci	main.c	/^	unsigned short pci;  \/\/小区物理ID$/;"	m	struct:CellScan	file:
+pci	main.c	/^	unsigned short pci;\/\/小区物理ID$/;"	m	struct:Mac_msg	file:
+pci	stDecodeSIB.h	/^	unsigned short pci;  \/\/小区物理ID$/;"	m	struct:CellScan
+pci	stDecodeSIB.h	/^	unsigned short pci;\/\/小区物理ID$/;"	m	struct:Mac_msg
+pos	main - 副本.cc	/^int pos;      \/\/当前数据位置$/;"	v
+pos	main.c	/^int pos;      \/\/当前数据位置$/;"	v
+pos	stDecodeSIB.c	/^int pos;      \/\/当前数据位置$/;"	v
+rnti	main.c	/^	unsigned short rnti;  \/\/rnti表示空口无线网络标识,范围1-65535$/;"	m	struct:Mac_msg	file:
+rnti	stDecodeSIB.h	/^	unsigned short rnti;  \/\/rnti表示空口无线网络标识,范围1-65535$/;"	m	struct:Mac_msg
+rsrp	main.c	/^	short rsrp;			 \/\/参考信号功率$/;"	m	struct:CellScan	file:
+rsrp	main.c	/^	short rsrp;	\/\/参考信号功率$/;"	m	struct:Mac_msg	file:
+rsrp	stDecodeSIB.h	/^	short rsrp;			 \/\/参考信号功率$/;"	m	struct:CellScan
+rsrp	stDecodeSIB.h	/^	short rsrp;	\/\/参考信号功率$/;"	m	struct:Mac_msg
+rsrq	main.c	/^	short rsrq;			 \/\/参考信号质量$/;"	m	struct:CellScan	file:
+rsrq	main.c	/^	short rsrq;\/\/参考信号质量$/;"	m	struct:Mac_msg	file:
+rsrq	stDecodeSIB.h	/^	short rsrq;			 \/\/参考信号质量$/;"	m	struct:CellScan
+rsrq	stDecodeSIB.h	/^	short rsrq;\/\/参考信号质量$/;"	m	struct:Mac_msg
+rssi	main.c	/^	short rssi; \/\/参考信号场强$/;"	m	struct:Mac_msg	file:
+rssi	stDecodeSIB.h	/^	short rssi; \/\/参考信号场强$/;"	m	struct:Mac_msg
+si_ms_time	main - 副本.cc	/^int si_ms_time[7]={1,2,5,10,15,20,40};\/\/40代表40毫秒$/;"	v
+si_ms_time	main.c	/^int si_ms_time[7]={1,2,5,10,15,20,40};\/\/40代表40毫秒$/;"	v
+si_ms_time	stDecodeSIB.c	/^int si_ms_time[7]={1,2,5,10,15,20,40};\/\/40代表40毫秒$/;"	v
+stCellScan	main.c	/^}stCellScan;$/;"	t	typeref:struct:CellScan	file:
+stCellScan	stDecodeSIB.h	/^}stCellScan;$/;"	t	typeref:struct:CellScan
+stMac_msg	main.c	/^}stMac_msg;$/;"	t	typeref:struct:Mac_msg	file:
+stMac_msg	stDecodeSIB.h	/^}stMac_msg;$/;"	t	typeref:struct:Mac_msg
+tac	main.c	/^	unsigned short tac;  \/\/基站跟踪区$/;"	m	struct:CellScan	file:
+tac	stDecodeSIB.h	/^	unsigned short tac;  \/\/基站跟踪区$/;"	m	struct:CellScan
+tti	main.c	/^	unsigned short tti;	\/\/tti = sfn|subframe 范围 0-10239，sfn = \/\/tti\/10,subfn=tti%10$/;"	m	struct:Mac_msg	file:
+tti	stDecodeSIB.h	/^	unsigned short tti;	\/\/tti = sfn|subframe 范围 0-10239，sfn = \/\/tti\/10,subfn=tti%10$/;"	m	struct:Mac_msg
+uint16	main.c	/^typedef unsigned short uint16;$/;"	t	file:
+uint16	stDecodeSIB.h	/^typedef unsigned short uint16;$/;"	t
+uint32	main - 副本.cc	/^typedef unsigned int uint32;$/;"	t	file:
+uint32	main.c	/^typedef unsigned int uint32;$/;"	t	file:
+uint32	stDecodeSIB.c	/^typedef unsigned int uint32;$/;"	t	file:
+uint32	stDecodeSIB.h	/^typedef unsigned int uint32;$/;"	t
+uint8	main - 副本.cc	/^typedef unsigned char uint8;$/;"	t	file:
+uint8	main.c	/^typedef unsigned char uint8;$/;"	t	file:
+uint8	stDecodeSIB.c	/^typedef unsigned char uint8;$/;"	t	file:
+uint8	stDecodeSIB.h	/^typedef unsigned char uint8;$/;"	t

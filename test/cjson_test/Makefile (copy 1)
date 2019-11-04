@@ -1,0 +1,25 @@
+#######################
+
+SRC = $(wildcard *.c)
+OBJ = $(src:%.c=%.o)
+
+INC += -I../lib/slog/
+LIBS += -lpthread
+GDB += -g
+
+EXE_TEST = exe
+EXE = ../bin/exe
+
+
+exe:$(OBJ)
+	$(CC) $(OBJ) -o $(EXE_TEST) $(LIBS) $(GDB) $(INC)
+	$(CC) $(OBJ) -o $(EXE) $(LIBS)		
+	$(RM) $(OBJ) 
+
+$(obj):$(SRC)
+	$(CC) $(subst .o,.c,$@) -o $@ -c
+	
+.PHONY:clean
+clean:
+	$(RM) exe
+
