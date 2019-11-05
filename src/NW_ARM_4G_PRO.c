@@ -7,8 +7,9 @@
 //pid
 #include<sys/types.h>
 #include<sys/wait.h>
+#include<stdbool.h>
 
-int global_x = 1;
+int global_x = 10;
 int global_channel = 24;
 int global_isWaiting = 1;
 char global_comm[32] = {0};
@@ -47,227 +48,160 @@ int set_timer_sec(int nu, int sec)
 	}
 }
 
-void *th_Listen(void* thIn)
-{
-	char cmd[32] = { 0 };
-	char *buf = (char*)malloc(sizeof(char) * 1024);
-
-	char rfcomm_x[16] = {0};
-	char comm[16] = {0};
-	char tmp[256] = {0};
-	int ret = 0;
-	FILE *fp = NULL;
-	
-	int ctl = 0;
-	int dev = 1;
-	bdaddr_t addr = {0};
-	bacpy(&addr, BDADDR_ANY);
-
-	sprintf(comm, "/dev/rfcomm%d", global_x++);
-	sprintf(global_comm, "/dev/rfcomm%d", global_x++);
-	while(1)
-	{
-		printf("global_isWaiting = %d\n", global_isWaiting);
-		switch (global_isWaiting)
-		{
-			case 0:
-				break;
-			//断开状态或是初始状态
-			case 1:
-				//从rfcomm0开始判断/dev/rfcommX文件是否存在。
-				//返回-1表示不存在，即可作为监听的端口文件
-				//否则就继续判断下一个文件rfcomm1,2,3,4,5，，，等
-				if(access(comm,0)==-1)
-				{
-					//进入等待连接状态流程
-					global_isWaiting = 2;
-					break;
-				}
-
-				global_x++;
-				sprintf(comm, "/dev/rfcomm%d", global_x);
-				sprintf(global_comm, "/dev/rfcomm%d", global_x);
-
-				//判断是否需要退出线程
-				if (g_isExit == 1)
-				{
-					break;
-				}
-				break;
-
-			//等待连接状态
-			case 2:
-				memset(cmd, 0, sizeof(cmd));
-				sprintf(cmd, "sudo sdptool add --channel=%d SP", global_channel);
-				system(cmd);
-				printf("sdptool add ok!\n");
-				//开始监听连接
-				cmd_listen(ctl, dev, &addr, 0, NULL);
-				
-				//监听退出，连接断开，进入状态1
-				global_isWaiting = 1;
-#ifdef TTT
-				memset(cmd, 0, sizeof(cmd));
-				sprintf(cmd, "sudo rfcomm release /dev/rfcomm%d", global_x);
-				system(cmd);
-				
-				system("sudo ./../test/shell_test/kill_pid_bluetoothd.sh");
-#endif
-				//判断是否需要退出线程
-				if (g_isExit == 1)
-				{
-					break;
-				}
-				break;
-
-			
-			default:
-				//错误的状态
-				printf(" global_isWaiting value ERROR!\n");
-				break;
-
-		}
-		sleep(1);		
-		
-	}
-
-	free(buf);
-	buf = NULL;
-
-EXIT:
-	pthread_exit(NULL);
-}
-
 
 void *th_RDWR(void *th)
 {
 	printf("Running In th_RDWR thread...\n");
 	char comm[32] = {0};
 	char cmd[32] = {0};
-	char *buf = (char*)malloc(sizeof(char)*256);
-
+	
 	int i = 0;
 	int retReadLen = 0;
 	int retWriteLen = 0;
+	
+	char *buf = (char*)malloc(sizeof(char)*256);
 	char* recvBuf = (char*)malloc(sizeof(char)*1024);
 	char* str = (char*)malloc(sizeof(char)*1024);
 
 	MessageHeader *msgHead = (MessageHeader*)malloc(sizeof(MessageHeader));
 	sprintf(comm,"/dev/rfcomm%d", global_x);
 	sprintf(global_comm, "/dev/rfcomm%d", global_x);
-
+	
+	//add 2019年11月5日20:01:26
+	//定义标志位
+	//初始化时，查找标识位为真，即为准备开始查找
+	bool isFindRfcommFile = true;
+	bool isExistRfcommFile = false;
+	bool isOpenRfcomm = false;
+	bool isWriteRead = false;
+	bool isWriteReadError = false;
+	bool isReConnected = false;
+	
 	while(1)
 	{
-		switch(global_isWaiting)
+		if(isFindRfcommFile)
+		{	
+			//printf("判断相关rfcomm文件是否存在\n");
+			
+			//判断相关rfcomm文件是否存在
+			if(access(global_comm, F_OK) != 0)
+			{
+				printf("file Not EXIST!\n");
+				if(--global_x <= 0)
+				{
+					global_x = 10;
+				}
+				sprintf(global_comm,"/dev/rfcomm%d", global_x);
+				continue;
+			}
+			
+			//查找到了相关的文件
+			isFindRfcommFile = false;
+			isExistRfcommFile = true;
+		}
+		
+		//判断相关rfcomm文件是否存在
+		if(isExistRfcommFile)
 		{
-			//等待连接状态	
-			case 1:
-				printf("global_isWaiting = %d, global_comm:%s\n", global_isWaiting, global_comm);
-				//判断相关rfcomm文件是否存在
-				if(access(global_comm, F_OK) != 0)
-				{
-					printf("file Not EXIST!\n");
-					break;
-				}
-
-				//文件存在，开始读写数据
-				g_fd = sniffer_Open(global_comm);
-				if (g_fd < 0)
-				{
-					printf("Open port failed!, return false!");
-					SLOG_ST_ERROR("Open port failed, return %d", g_fd);
-					goto EXIT;
-				}
-
-				printf("open %s success,start to RDWR...\n", comm);
-				SLOG_ST_INFO("Open success, start to read or write..");
-				
-				for (;;)
-				{	
-					printf("\nStart running In Main for...\n");	
-					SLOG_ST_DEBUG("Start running In Main for...");
-
-					//value init 
-					retWriteLen = 0;
-					retReadLen = 0;
-					memset(recvBuf, 0, sizeof(char)*1024);
-					memset(str, 0, sizeof(char)*1024);
-					memset((char*)msgHead, 0, sizeof(MessageHeader));
-					
-					//read msg head
-					retReadLen = readLenData(&g_fd, recvBuf, MSG_HEAD_SIZE);		
-					if(retReadLen < 0 )
-					{
-						sniffer_Close(g_fd);
-						global_isWaiting = 1;
-						break;
-					}
-
-					//decode msg head
-					DecodeRecvHead(recvBuf, msgHead);
-				
-					//read msg data 
-					retReadLen = readLenData(&g_fd, recvBuf+MSG_HEAD_SIZE, msgHead->msgSize);	
-					if(retReadLen < 0 )
-					{
-						sniffer_Close(g_fd);
-						global_isWaiting = 1;
-						break;
-					}
-
-					printf("th_RDWR read data lens:%ld, data:%s\n",strlen(recvBuf), recvBuf);
-					SLOG_ST_INFO("th_RDWR read data lens:%d, data:%s\n",strlen(recvBuf), recvBuf);
-
-					//decode recv data
-					DecodeRecvData(msgHead, recvBuf, str); 
-					
-					//write make data
-					retWriteLen = writeLenData(&g_fd, str, strlen(str));
-					if(retWriteLen < 0 )
-					{
-						sniffer_Close(g_fd);
-						global_isWaiting = 1;
-						break;
-					}
-
-					printf("th_RDWR:write data lens:%d, data:%s\n",retWriteLen, str);			
-					
-					printf("End Main for, and restart!\n\n");
-					SLOG_ST_DEBUG("End Main for, and restart");
-					
-					if (g_isExit == 1)
-					{
-						sniffer_Close(g_fd);
-						printf("closed fd, BYE!!\n");
-				
-						break;
-					}
-				}
+			printf("存在，即将打开:%s\n",global_comm);
+			//存在，即将打开
+			//文件存在，开始读写数据
+			g_fd = sniffer_Open(global_comm);
+			if (g_fd < 0)
+			{
 				break;
+				//goto EXIT;
+			}
+		
+			//已将文件打开
+			isExistRfcommFile = false;
+			isOpenRfcomm = true;
+		}
+		
+		//打开成功，开始读写数据
+		if(isOpenRfcomm)
+		{	
+			printf("打开成功，开始读写数据\n");	
+			isOpenRfcomm = false;
+			isWriteRead = true;
+		}
 
-			default:
-				printf("global_isWaiting = %d\n", global_isWaiting);
+		if(isWriteRead)
+		{
+			printf("正在读写数据\n");	
+			//value init 
+			retWriteLen = 0;
+			retReadLen = 0;
+			memset(recvBuf, 0, sizeof(char)*1024);
+			memset(str, 0, sizeof(char)*1024);
+			memset((char*)msgHead, 0, sizeof(MessageHeader));
+			
+			//read msg head
+			retReadLen = readLenData(&g_fd, recvBuf, MSG_HEAD_SIZE);		
+			if(retReadLen < 0 )
+			{
+				isWriteRead = false;
+				//当读写出错时置位真
+				isWriteReadError = true;
+				continue;
+			}
 
-				break;
+			//decode msg head
+			DecodeRecvHead(recvBuf, msgHead);
+		
+			//read msg data 
+			retReadLen = readLenData(&g_fd, recvBuf+MSG_HEAD_SIZE, msgHead->msgSize);	
+			if(retReadLen < 0 )
+			{
+				isWriteRead = false;
+				//当读写出错时置位真
+				isWriteReadError = true;
+				continue;
+			}
+
+			printf("th_RDWR read data lens:%ld, data:%s\n",strlen(recvBuf), recvBuf);
+			SLOG_ST_INFO("th_RDWR read data lens:%d, data:%s\n",strlen(recvBuf), recvBuf);
+
+			//decode recv data
+			DecodeRecvData(msgHead, recvBuf, str); 
+			
+			//write make data
+			retWriteLen = writeLenData(&g_fd, str, strlen(str));
+			if(retWriteLen < 0 )
+			{
+				isWriteRead = false;
+				//当读写出错时置位真
+				isWriteReadError = true;		
+				continue;
+			}	
+			
+		}
+			
+		if(isWriteReadError)
+		{
+			printf("读写数据出错，准备重连\n");	
+			sniffer_Close(g_fd);
+				
+			isWriteReadError = false;
+			isReConnected = true;
+		}
+		
+		if(isReConnected)
+		{
+			printf("请重新连接\n");	
+			isReConnected = false;
+			isFindRfcommFile = true;
 		}
 		
 		//判断是否需要退出线程
 		if (g_isExit == 1)
 		{
+			printf("退出线程\n");	
 			break;
 		}
-
-		if (global_isWaiting == 0)
-		{
-			break;
-		}
-		if(++global_x >= 10)
-			global_x = 0;
-
-		sprintf(global_comm,"/dev/rfcomm%d", global_x);
-	}
-	
-	
+		
+	} 
+		
 	//free	
 	free(msgHead);
 	msgHead = NULL;
@@ -278,8 +212,6 @@ void *th_RDWR(void *th)
 	free(str);
 	str = NULL;
 	
-
-EXIT:
 	free(buf);
 	buf = NULL;
 	pthread_exit("Thread BYE!");
@@ -476,16 +408,6 @@ int main(int argc, char **argv)
 	SLOG_ST_INFO("Create th_RDWR thread success!");
 	int ret;
 	void  *thread_result;
-#ifdef LISTEN    
-	pthread_t th_listen = NULL;
-	ret = pthread_create(&th_listen, NULL, th_Listen, NULL);
-	if(ret != 0)
-	{
-		perror("pthread_create error");
-		SLOG_ST_ERROR("Create th_Listen false!");
-		return -2;
-	}
-#endif
 
 //#ifdef RDWR 
 	pthread_t th;
@@ -497,16 +419,19 @@ int main(int argc, char **argv)
 		return -1;
 	}
 //#endif
-	while(1)
+	int Nu = 3;
+	while(Nu)
 	{
 		g_blue_status = 1;
 		system("sudo ./../test/shell_test/kill_pid_bluetoothd.sh");
 		g_blue_status = 2;
 		system("sudo ./../test/shell_test/init_bluetooth_listen.sh");
 		g_blue_status = 1;
-
+		
 		if(g_blue_status == -1)
 			break;
+		
+		Nu--;
 	}
 
 #ifdef TIMERTTT
@@ -544,11 +469,6 @@ int main(int argc, char **argv)
 
 	free(readConfBuf);
 	readConfBuf = NULL;
-
-			
-#ifdef LISTEN  
-	pthread_join(th_listen, &thread_result);
-#endif
 
 //#ifdef RDWR
 	pthread_join(th, &thread_result);

@@ -5,7 +5,7 @@ hciconfig -a
 
 n=1
 channel=22
-rfcomm_x=0
+rfcomm_x=1
 pid=0
 while (( $n<=2 ))
 do
