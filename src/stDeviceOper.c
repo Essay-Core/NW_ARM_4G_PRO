@@ -131,8 +131,8 @@ int DEV_SendLocatePara(POSITION_PARA *postionPara, char *result)
 
 	targInfo->Earfn = 46001;
 	targInfo->Pci = 0x11;
-	targInfo->Cid = 0x22;
-	targInfo->Tac = 0x33;
+	targInfo->Cid = 209340932;
+	targInfo->Tac = 9294;
 	targInfo->Rssi = 0x44;
 	targInfo->Distance = 0x55;
 	targInfo->Crnti = 0x66;
