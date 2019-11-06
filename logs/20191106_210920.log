@@ -1,0 +1,6 @@
+[INFO ] 20191106_211236 main:621 -| Main BYE!
+    4: ./exe() [0x409eda]
+    3: ./exe() [0x40a385]
+    2: ./exe() [0x403422]
+    1: /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf5) [0x7fc998543f45]
+    0: ./exe() [0x402469]

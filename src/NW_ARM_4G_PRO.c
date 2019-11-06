@@ -10,6 +10,7 @@
 #include<stdbool.h>
 
 int global_x = 10;
+int global_xNumber = 0;
 int global_channel = 24;
 int global_isWaiting = 1;
 char global_comm[32] = {0};
@@ -27,25 +28,125 @@ void *th_Listen(void* th);
 void *th_RDWR(void *th);
 void *th_run_timer(void *th);
 void signal_hander(int m);
+int set_timer_sec(int nu, int sec);
 
-int set_timer_sec(int nu, int sec)
+
+void *th_Listen(void* thIn)
 {
-	if (sec < 0)
+#ifdef TTT	
+	int Nu = 3;
+	while(Nu)
 	{
-		return -1;
+		g_blue_status = 1;
+		system("sudo ./../test/shell_test/kill_pid_bluetoothd.sh");
+		g_blue_status = 2;
+		system("sudo ./../test/shell_test/init_bluetooth_listen.sh");
+		g_blue_status = 1;
+		
+		if(g_blue_status == -1)
+			break;
+		
+		Nu--;
 	}
-	printf("set_timer_sec: nu:%d, sec:%d\n", nu, sec);
-	switch(nu)
+#endif
+
+/////////////////////////////////////////////////////////////
+	//初始化标志位
+	bool g_fg_Find_Max_RFCOMM = true;
+	bool g_fg_Find_Max_OK = false;
+	bool g_fg_Listen_start = false;
+	bool g_fg_Connect_Stop = false;
+	bool g_fg_Connect_Reconnect = false;
+	
+	int ctl = 0;
+	int dev = 21;
+	bdaddr_t addr = {0};
+	bacpy(&addr, BDADDR_ANY);
+	
+	char cmd[128] = {0};
+	//查找已存在的端口文件
+	global_x = 2;
+	sprintf(global_comm,"/dev/rfcomm%d", global_x);
+	while(1)
 	{
-		case 2:
-			time_sec2 = sec;
+		if(g_fg_Find_Max_RFCOMM)
+		{
+			//查找已存在的端口文件
+			if(access(global_comm, F_OK) != 0)
+			{
+				//文件不存在
+				//printf("file Not EXIST!\n");
+				global_xNumber = global_x;
+			}
+			else 
+			{
+				//文件已存在
+				global_x++;
+				sprintf(global_comm,"/dev/rfcomm%d", global_x);
+				continue;
+			}	
+			
+			printf("文件已存在!\n");
+			g_fg_Find_Max_RFCOMM = false;
+			g_fg_Find_Max_OK = true;
+		}
+		
+		if(g_fg_Find_Max_OK)
+		{
+			//已过滤存在的端口文件，开始监听连接		
+			g_fg_Find_Max_OK = false;
+			g_fg_Listen_start = true;
+		}
+		
+		if(g_fg_Listen_start)
+		{  
+			//release_all(ctl);
+			//cmd_release(ctl, dev, &addr, 0, NULL);
+#ifdef TTT
+			sprintf(cmd, "sudo sdptool add --channel=%d SP", global_channel);
+			system(cmd);
+			printf("sdptool add ok!\n");
+			//开始监听连接
+			cmd_listen(ctl, 2, &addr, global_channel, NULL);
+			printf("cmd_listen return.\n");
+			
+			/////////////////////////////////////////////////////
+#endif	
+			global_x++;
+			sprintf(cmd, "sudo ./../test/shell_test/kill_pid_bluetoothd.sh %d %d",global_x, global_channel);
+			system(cmd);	
+			system("sudo ./../test/shell_test/init_bluetooth_listen.sh");
+
+			g_fg_Listen_start = false;
+			g_fg_Connect_Stop = true;
+		}
+		
+		if(g_fg_Connect_Stop)
+		{
+			//连接断开，准备重连
+			g_fg_Connect_Stop = false;
+			g_fg_Connect_Reconnect = true;
+		}
+		
+		if(g_fg_Connect_Reconnect)
+		{
+			//重新判断断开文件默认最大值
+			g_fg_Connect_Reconnect = false;
+			g_fg_Find_Max_RFCOMM = true;
+		}
+		
+		//判断是否需要退出线程
+		if (g_isExit == 1)
+		{
+			printf("退出线程\n");	
 			break;
-		case 3:
-			time_sec3 = sec;
-		break;
-		default:
-			break;
+		}
+		usleep(100);
 	}
+
+//////////////////////////////////////////////////////////////
+
+	pthread_exit(NULL);
 }
 
 
@@ -64,8 +165,9 @@ void *th_RDWR(void *th)
 	char* str = (char*)malloc(sizeof(char)*1024);
 
 	MessageHeader *msgHead = (MessageHeader*)malloc(sizeof(MessageHeader));
-	sprintf(comm,"/dev/rfcomm%d", global_x);
-	sprintf(global_comm, "/dev/rfcomm%d", global_x);
+//	sprintf(comm,"/dev/rfcomm%d", global_x);
+//	sprintf(global_comm, "/dev/rfcomm%d", global_x);
+	sprintf(global_comm, "/dev/rfcomm%d", 0);
 	
 	//add 2019年11月5日20:01:26
 	//定义标志位
@@ -82,16 +184,13 @@ void *th_RDWR(void *th)
 		if(isFindRfcommFile)
 		{	
 			//printf("判断相关rfcomm文件是否存在\n");
-			
+			//判断是和否为新增文件？
 			//判断相关rfcomm文件是否存在
 			if(access(global_comm, F_OK) != 0)
 			{
-				printf("file Not EXIST!\n");
-				if(--global_x <= 0)
-				{
-					global_x = 10;
-				}
-				sprintf(global_comm,"/dev/rfcomm%d", global_x);
+				//printf("file Not EXIST!\n");	
+				//sprintf(global_comm,"/dev/rfcomm%d", global_x);
+				sleep(1);
 				continue;
 			}
 			
@@ -110,7 +209,6 @@ void *th_RDWR(void *th)
 			if (g_fd < 0)
 			{
 				break;
-				//goto EXIT;
 			}
 		
 			//已将文件打开
@@ -140,8 +238,8 @@ void *th_RDWR(void *th)
 			retReadLen = readLenData(&g_fd, recvBuf, MSG_HEAD_SIZE);		
 			if(retReadLen < 0 )
 			{
-				isWriteRead = false;
 				//当读写出错时置位真
+				isWriteRead = false;
 				isWriteReadError = true;
 				continue;
 			}
@@ -153,8 +251,8 @@ void *th_RDWR(void *th)
 			retReadLen = readLenData(&g_fd, recvBuf+MSG_HEAD_SIZE, msgHead->msgSize);	
 			if(retReadLen < 0 )
 			{
-				isWriteRead = false;
 				//当读写出错时置位真
+				isWriteRead = false;
 				isWriteReadError = true;
 				continue;
 			}
@@ -169,8 +267,8 @@ void *th_RDWR(void *th)
 			retWriteLen = writeLenData(&g_fd, str, strlen(str));
 			if(retWriteLen < 0 )
 			{
-				isWriteRead = false;
 				//当读写出错时置位真
+				isWriteRead = false;
 				isWriteReadError = true;		
 				continue;
 			}	
@@ -371,6 +469,27 @@ ERROR:
 
 }	
 
+
+int set_timer_sec(int nu, int sec)
+{
+	if (sec < 0)
+	{
+		return -1;
+	}
+	printf("set_timer_sec: nu:%d, sec:%d\n", nu, sec);
+	switch(nu)
+	{
+		case 2:
+			time_sec2 = sec;
+			break;
+		case 3:
+			time_sec3 = sec;
+		break;
+		default:
+			break;
+	}
+}
+
 int main(int argc, char **argv) 
 {  
 	//read config file
@@ -404,12 +523,40 @@ int main(int argc, char **argv)
 	
 		return -2;
 	}
-
-	SLOG_ST_INFO("Create th_RDWR thread success!");
+	
 	int ret;
 	void  *thread_result;
-
-//#ifdef RDWR 
+	char cmd[128] = {0};
+	
+////////////////////////////////////////////////////////////////////////////	
+#ifdef TTTT  
+	int ctl = 0;
+	int dev = 1;
+	bdaddr_t addr = {0};
+	bacpy(&addr, BDADDR_ANY);
+	
+	
+	sprintf(cmd, "sudo sdptool add --channel=%d SP", global_channel);
+	system(cmd);
+	printf("sdptool add ok!\n");
+	//开始监听连接
+	cmd_listen(ctl, dev, &addr, global_channel, NULL);
+#endif 
+////////////////////////////////////////////////////////////////////////////
+			
+//#ifdef LISTEN    
+	pthread_t th_listen = NULL;
+	ret = pthread_create(&th_listen, NULL, th_Listen, NULL);
+	if(ret != 0)
+	{
+		perror("pthread_create error");
+		SLOG_ST_ERROR("Create th_Listen false!");
+		return -2;
+	}
+//#endif
+	//th_Listen(NULL);
+	
+#ifdef RDWRTTT 
 	pthread_t th;
 	ret = pthread_create(&th, NULL, th_RDWR, NULL);
 	if (ret != 0)
@@ -418,21 +565,8 @@ int main(int argc, char **argv)
 		SLOG_ST_ERROR("Create thread false!");
 		return -1;
 	}
-//#endif
-	int Nu = 3;
-	while(Nu)
-	{
-		g_blue_status = 1;
-		system("sudo ./../test/shell_test/kill_pid_bluetoothd.sh");
-		g_blue_status = 2;
-		system("sudo ./../test/shell_test/init_bluetooth_listen.sh");
-		g_blue_status = 1;
-		
-		if(g_blue_status == -1)
-			break;
-		
-		Nu--;
-	}
+#endif
+
 
 #ifdef TIMERTTT
 	pthread_t th_timer;
@@ -451,7 +585,7 @@ int main(int argc, char **argv)
 
 #endif
 
-	char cmd[33] = { 0 };
+	//char cmd[33] = { 0 };
 	while (1)
 	{
 		scanf("%s", cmd);
@@ -470,8 +604,12 @@ int main(int argc, char **argv)
 	free(readConfBuf);
 	readConfBuf = NULL;
 
-//#ifdef RDWR
+#ifdef RDWRTTT
 	pthread_join(th, &thread_result);
+#endif
+
+//#ifdef LISTEN  
+	pthread_join(th_listen, &thread_result);
 //#endif
 
 #ifdef TIMERTTT
@@ -484,4 +622,3 @@ int main(int argc, char **argv)
 	printf("Main BYE!!\n");
 	return 0;
 }  
-

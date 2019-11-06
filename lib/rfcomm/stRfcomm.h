@@ -56,5 +56,7 @@ static char *rfcomm_state[] = {
 static volatile sig_atomic_t __io_canceled = 0;
 
 void cmd_listen(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv);
+void cmd_release(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv);
+int release_all(int ctl);
 
 #endif

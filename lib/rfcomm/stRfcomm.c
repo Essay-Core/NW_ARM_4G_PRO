@@ -185,7 +185,7 @@ static int release_dev(int ctl, int dev, uint32_t flags)
 	return err;
 }
 
-static int release_all(int ctl)
+int release_all(int ctl)
 {
 	struct rfcomm_dev_list_req *dl;
 	struct rfcomm_dev_info *di;
@@ -445,7 +445,8 @@ void cmd_listen(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)
 
 	laddr.rc_family = AF_BLUETOOTH;
 	bacpy(&laddr.rc_bdaddr, bdaddr);
-	laddr.rc_channel = 24;
+	//laddr.rc_channel = 24;
+	laddr.rc_channel = argc;
 
 	sk = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 	if (sk < 0) {
@@ -566,19 +567,21 @@ void cmd_listen(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)
 	sigdelset(&sigs, SIGTERM);
 	sigdelset(&sigs, SIGINT);
 	sigdelset(&sigs, SIGHUP);
-
 	p.fd = fd;
 	p.events = POLLERR | POLLHUP;
 
-	if (argc <= 2) {
-		while (!__io_canceled) {
+	if (argc <= 2) 
+	{
+		while (!__io_canceled) 
+		{
 			p.revents = 0;
 			if (ppoll(&p, 1, NULL, &sigs) > 0)
 				break;
 		}
 	} else
+	{
 		run_cmdline(&p, &sigs, devname, argc - 2, argv + 2);
-
+	}
 	sa.sa_handler = NULL;
 	sigaction(SIGTERM, &sa, NULL);
 	sigaction(SIGINT,  &sa, NULL);
@@ -613,7 +616,7 @@ static void cmd_create(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv
 		create_dev(ctl, dev, 0, bdaddr, argc, argv);
 }
 
-static void cmd_release(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)
+void cmd_release(int ctl, int dev, bdaddr_t *bdaddr, int argc, char **argv)
 {
 	if (strcmp(argv[0], "all") == 0)
 		release_all(ctl);

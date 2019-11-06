@@ -1,0 +1,56 @@
+[ERROR] 20191106_211353 DecodeRecvHead:187 -| Msg type ERROR! source:0, target:0
+    5: ./exe() [0x409f58]
+    4: ./exe() [0x40a403]
+    3: ./exe() [0x403cc5]
+    2: ./exe() [0x4029b7]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
+[INFO ] 20191106_211353 th_RDWR:261 -| th_RDWR read data lens:0, data:
+
+    4: ./exe() [0x409f58]
+    3: ./exe() [0x40a403]
+    2: ./exe() [0x402a48]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
+[ERROR] 20191106_211353 DecodeRecvData:210 -| MakeSendData ILLEGAL ARGUMENT! input str lens:0 data:
+    5: ./exe() [0x409f58]
+    4: ./exe() [0x40a403]
+    3: ./exe() [0x403db3]
+    2: ./exe() [0x402a5f]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
+[ERROR] 20191106_211353 writeLenData:81 -| read ERROR In writeLenData!
+    5: ./exe() [0x409f58]
+    4: ./exe() [0x40a403]
+    3: ./exe() [0x403903]
+    2: ./exe() [0x402a7e]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
+[ERROR] 20191106_211353 DecodeRecvHead:187 -| Msg type ERROR! source:0, target:0
+    5: ./exe() [0x409f58]
+    4: ./exe() [0x40a403]
+    3: ./exe() [0x403cc5]
+    2: ./exe() [0x4029b7]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
+[INFO ] 20191106_211353 th_RDWR:261 -| th_RDWR read data lens:0, data:
+
+    4: ./exe() [0x409f58]
+    3: ./exe() [0x40a403]
+    2: ./exe() [0x402a48]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
+[ERROR] 20191106_211353 DecodeRecvData:210 -| MakeSendData ILLEGAL ARGUMENT! input str lens:0 data:
+    5: ./exe() [0x409f58]
+    4: ./exe() [0x40a403]
+    3: ./exe() [0x403db3]
+    2: ./exe() [0x402a5f]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
+[ERROR] 20191106_211353 writeLenData:81 -| read ERROR In writeLenData!
+    5: ./exe() [0x409f58]
+    4: ./exe() [0x40a403]
+    3: ./exe() [0x403903]
+    2: ./exe() [0x402a7e]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7f06affa1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f06af59603d]
