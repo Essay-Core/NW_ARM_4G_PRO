@@ -69,6 +69,13 @@ void *th_Listen(void* thIn)
 	sprintf(global_comm,"/dev/rfcomm%d", global_x);
 	while(1)
 	{
+		//判断是否需要退出线程
+		if (g_isExit == 1)
+		{
+			printf("退出线程\n");	
+			break;
+		}
+		
 		if(g_fg_Find_Max_RFCOMM)
 		{
 			//查找已存在的端口文件
@@ -135,12 +142,7 @@ void *th_Listen(void* thIn)
 			g_fg_Find_Max_RFCOMM = true;
 		}
 		
-		//判断是否需要退出线程
-		if (g_isExit == 1)
-		{
-			printf("退出线程\n");	
-			break;
-		}
+		
 		usleep(100);
 	}
 
@@ -167,7 +169,8 @@ void *th_RDWR(void *th)
 	MessageHeader *msgHead = (MessageHeader*)malloc(sizeof(MessageHeader));
 //	sprintf(comm,"/dev/rfcomm%d", global_x);
 //	sprintf(global_comm, "/dev/rfcomm%d", global_x);
-	sprintf(global_comm, "/dev/rfcomm%d", 0);
+	global_x = 0;
+	sprintf(global_comm, "/dev/rfcomm%d", global_x);
 	
 	//add 2019年11月5日20:01:26
 	//定义标志位
@@ -181,6 +184,13 @@ void *th_RDWR(void *th)
 	
 	while(1)
 	{
+		//判断是否需要退出线程
+		if (g_isExit == 1)
+		{
+			printf("退出线程\n");	
+			break;
+		}
+		
 		if(isFindRfcommFile)
 		{	
 			//printf("判断相关rfcomm文件是否存在\n");
@@ -278,8 +288,15 @@ void *th_RDWR(void *th)
 		if(isWriteReadError)
 		{
 			printf("读写数据出错，准备重连\n");	
+			
 			sniffer_Close(g_fd);
-				
+			sprintf(cmd, "sudo rfcomm release /dev/rfcomm1");
+			system(cmd);
+			
+			//global_x++;
+			//sprintf(global_comm, "/dev/rfcomm%d", global_x);
+			//printf("change rfcomm:%s\n", global_comm);
+			
 			isWriteReadError = false;
 			isReConnected = true;
 		}
@@ -534,8 +551,7 @@ int main(int argc, char **argv)
 	int dev = 1;
 	bdaddr_t addr = {0};
 	bacpy(&addr, BDADDR_ANY);
-	
-	
+
 	sprintf(cmd, "sudo sdptool add --channel=%d SP", global_channel);
 	system(cmd);
 	printf("sdptool add ok!\n");
@@ -544,7 +560,7 @@ int main(int argc, char **argv)
 #endif 
 ////////////////////////////////////////////////////////////////////////////
 			
-//#ifdef LISTEN    
+#ifdef LISTEN    
 	pthread_t th_listen = NULL;
 	ret = pthread_create(&th_listen, NULL, th_Listen, NULL);
 	if(ret != 0)
@@ -553,10 +569,11 @@ int main(int argc, char **argv)
 		SLOG_ST_ERROR("Create th_Listen false!");
 		return -2;
 	}
-//#endif
 	//th_Listen(NULL);
+#endif
 	
-#ifdef RDWRTTT 
+	
+//#ifdef RDWRTTT 
 	pthread_t th;
 	ret = pthread_create(&th, NULL, th_RDWR, NULL);
 	if (ret != 0)
@@ -565,7 +582,7 @@ int main(int argc, char **argv)
 		SLOG_ST_ERROR("Create thread false!");
 		return -1;
 	}
-#endif
+//#endif
 
 
 #ifdef TIMERTTT
@@ -604,13 +621,13 @@ int main(int argc, char **argv)
 	free(readConfBuf);
 	readConfBuf = NULL;
 
-#ifdef RDWRTTT
+//#ifdef RDWRTTT
 	pthread_join(th, &thread_result);
-#endif
-
-//#ifdef LISTEN  
-	pthread_join(th_listen, &thread_result);
 //#endif
+
+#ifdef LISTEN  
+	pthread_join(th_listen, &thread_result);
+#endif
 
 #ifdef TIMERTTT
 	pthread_join(th_timer, &thread_result);
