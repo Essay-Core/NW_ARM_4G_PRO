@@ -128,13 +128,13 @@ int MakeSendData(void *st, char* result)
 		memcpy((char*)statInfo, (char*)st, sizeof(STAT_INFO));
 		MakeSendHead(&statInfo->msgHead, headStr, sizeof(headStr));
 		
-		sprintf(str, "%s%04x%04x%04x%04x%s%08x%04x",
+		sprintf(str, "%s%04x%04x%04x%04x20191107161633%016x%04x",
 			headStr,
 			statInfo->Bt_va,
 			statInfo->Tem_val,
 			statInfo->Dev_stat,
 			statInfo->Ad_stat,
-			statInfo->Timestart,
+			//statInfo->Timestart,
 			statInfo->Timework,
 			statInfo->Version);
   
@@ -193,7 +193,7 @@ int GetStrSize(UINT32 type, int Cid_num)
 			return 32+16;
 			
 		case MT_STAT_INFO:
-			return 16+16+8;
+			return 50;
 			
 		case MT_UPDATE_ACK:
 			return 8;

@@ -4,7 +4,7 @@ echo running in shell test
 hciconfig -a
 
 n=1
-channel=23
+channel=$2
 rfcomm_x=$1
 
 while (( $n<=3 ))

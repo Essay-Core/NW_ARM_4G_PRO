@@ -19,16 +19,16 @@ int DEV_CheckDevStatus(STATION_REQ * stationReq,char *result)
 	STAT_INFO *statInfo = (STAT_INFO*)malloc(sizeof(STAT_INFO));
 	char *str = (char*)malloc(sizeof(char)*1024);	
 	
-	statInfo->Bt_va = 46001;
+	statInfo->Bt_va = 99;
 	statInfo->Tem_val = 0x11;
 	statInfo->Dev_stat = 0x22;
 	statInfo->Ad_stat = 0x33;
-	sprintf(statInfo->Timestart, "0000000000000000");
+	sprintf(statInfo->Timestart, "00000000000000");
 	statInfo->Timework = 0x55;
-	statInfo->Version = 0x66;
+	statInfo->Version = 0x01;
 	
-	msgHead->source = (0x01);
-	msgHead->target = (0x02);
+	msgHead->source = (0x02);
+	msgHead->target = (0x01);
 	msgHead->priority = (0x03);
 	msgHead->Ackflg = (0x00);
 	msgHead->CRC = (0xffff);
@@ -84,8 +84,8 @@ int DEV_SendScanPara(SCAN_PARA *scanPara, char *result)
 	msgHead->msgSize = GetStrSize(msgHead->msgType, enbInfo->Cid_num);	
 
 	enbInfo->cidList = (stCidList*)malloc(sizeof(stCidList)*enbInfo->Cid_num);
-	enbInfo->cidList->cid = 0x99;
-	enbInfo->cidList->tac= 0x91;
+	enbInfo->cidList->cid = 0x01;
+	enbInfo->cidList->tac= 0x01;
 	enbInfo->cidList->resp = 0x92;
 	enbInfo->cidList->rsrq = 0x93;
 	
