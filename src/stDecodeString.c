@@ -9,7 +9,7 @@ extern int set_timer_sec(int nu, int sec);
 *******************************************************************/
 int readLenData(int *fd, char *result, int lenIn)
 {
-	if(fd < 0 || lenIn < 0 || lenIn > 120)
+	if(fd < 0 || lenIn < 0 /*|| lenIn > 120*/)
 	{
 		printf("readLenData ERROR\n");
 		return -1;

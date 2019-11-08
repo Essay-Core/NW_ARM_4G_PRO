@@ -10,9 +10,9 @@ static struct itimerval oldtv;
 struct itimerval itv, itv1, itv2, itv3;
 
 int g_flags = 0;
-int time_sec1 = 2;
-int time_sec2 = 2;
-int time_sec3 = 2;
+int time_sec1 = 10;
+int time_sec2 = 10;
+int time_sec3 = 10;
 
 int set_timer(int sig_type, struct itimerval itv, unsigned int sec)
 {
@@ -179,6 +179,7 @@ void *th_run3(void *th)
 	}
 
 }
+#ifdef TTT
 int main()
 {
 	printf("Main running...\n");
@@ -208,3 +209,5 @@ int main()
 	exit(0);
 	return 0;
 }
+#endif
+

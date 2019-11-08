@@ -20,7 +20,7 @@ int g_fd = 0;
 int g_blue_status = 0;
 
 
-//int time_sec1 = 2;
+int time_sec1 = 10;
 int time_sec2 = 10;
 int time_sec3 = 10;
 
@@ -334,8 +334,7 @@ void *th_RDWR(void *th)
 	return (void*)0;
 }
 
-
-void *th_run2(void *th)
+void *th_timer1(void *th)
 {
 	char *resultStr = (char*)malloc(sizeof(char)*1024);
 	memset(resultStr, 0, sizeof(char)*1024);
@@ -343,12 +342,11 @@ void *th_run2(void *th)
 
 	while(1)
 	{
-		printf("In th_run2.. sleep %d s\n", time_sec2);
-		sleep(time_sec2);
+		printf("In th_run1.. sleep %d s\n", time_sec2);
+		sleep(time_sec1);
 			
-		DEV_SendLocatePara(NULL, resultStr);
+		DEV_SendScanPara(NULL, resultStr);
 		retWriteLen = writeLenData(&g_fd, resultStr, strlen(resultStr));
-			
 		
 		if(g_isExit == 1)
 		{
@@ -361,7 +359,33 @@ void *th_run2(void *th)
 
 }
 
-void *th_run3(void *th)
+
+void *th_timer2(void *th)
+{
+	char *resultStr = (char*)malloc(sizeof(char)*1024);
+	memset(resultStr, 0, sizeof(char)*1024);
+	int retWriteLen = 0;
+
+	while(1)
+	{
+		printf("In th_run2.. sleep %d s\n", time_sec2);
+		sleep(time_sec2);
+			
+		DEV_SendLocatePara(NULL, resultStr);
+		retWriteLen = writeLenData(&g_fd, resultStr, strlen(resultStr));
+		
+		if(g_isExit == 1)
+		{
+			break;
+		}
+	}
+
+	free(resultStr);
+	resultStr = NULL;
+
+}
+
+void *th_timer3(void *th)
 {
 	char *resultStr = (char*)malloc(sizeof(char)*1024);
 	memset(resultStr, 0, sizeof(char)*1024);
@@ -399,9 +423,9 @@ void *th_run_timer(void *th)
 	signal(SIGVTALRM, signal_hander);
 	signal(SIGPROF, signal_hander);
 	
-	set_timer(ITIMER_REAL, itv1, 0);
-	set_timer(ITIMER_VIRTUAL, itv2, 0);
-	set_timer(ITIMER_PROF, itv3, 0);
+	set_timer(ITIMER_REAL, itv1, 2);
+	set_timer(ITIMER_VIRTUAL, itv2, 2);
+	set_timer(ITIMER_PROF, itv3, 2);
 
 	while(1)
 	{
@@ -447,7 +471,6 @@ void signal_hander(int m)
 			SLOG_ST_INFO("signal_hander write data lens:%d, data:%s", retWriteLen, resultStr);
 		
 			break;
-			
 		//TIMER2
 		case SIGPROF: 
 			printf("get SIGPROF...\n");
@@ -472,7 +495,6 @@ void signal_hander(int m)
 			SLOG_ST_INFO("signal_hander write data lens:%d, data:%s", retWriteLen, resultStr);
 		
 			break;
-			
 		default:
 			printf("get DEFAULT!! In signal handle\n");
 			break;
@@ -496,6 +518,9 @@ int set_timer_sec(int nu, int sec)
 	printf("set_timer_sec: nu:%d, sec:%d\n", nu, sec);
 	switch(nu)
 	{
+		case 1:
+			time_sec1 = sec;
+			break;
 		case 2:
 			time_sec2 = sec;
 			break;
@@ -584,23 +609,25 @@ int main(int argc, char **argv)
 	}
 //#endif
 
-
 #ifdef TIMERTTT
 	pthread_t th_timer;
 	ret = pthread_create(&th_timer,NULL, th_run_timer, NULL);
 	if (ret != 0)
 	{
 		printf("Create thread false!\n");
-    	SLOG_ST_ERROR("Create thread false!");
+    		SLOG_ST_ERROR("Create thread false!");
 		return -1;
 	}
 
+#endif	
+	pthread_t th1;
 	pthread_t th2;
 	pthread_t th3;
-	pthread_create(&th2,NULL, th_run2, NULL);
-	pthread_create(&th3,NULL, th_run3, NULL);
+	pthread_create(&th1,NULL, th_timer1, NULL);
+	pthread_create(&th2,NULL, th_timer2, NULL);
+	pthread_create(&th3,NULL, th_timer3, NULL);
 
-#endif
+
 
 	//char cmd[33] = { 0 };
 	while (1)
@@ -631,9 +658,12 @@ int main(int argc, char **argv)
 
 #ifdef TIMERTTT
 	pthread_join(th_timer, &thread_result);
+#endif
+
+	pthread_join(th1, &thread_result);
 	pthread_join(th2, &thread_result);
 	pthread_join(th3, &thread_result);
-#endif
+
 
 	SLOG_ST_INFO("Main BYE!");
 	printf("Main BYE!!\n");

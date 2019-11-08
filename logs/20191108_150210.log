@@ -1,0 +1,42 @@
+[INFO ] 20191108_150211 th_RDWR:271 -| th_RDWR read data lens:32, data:0001000200030000001e001600040004
+
+    4: ./exe() [0x40a057]
+    3: ./exe() [0x40a502]
+    2: ./exe() [0x402ab5]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7fd2789b1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7fd277fa603d]
+[INFO ] 20191108_150211 DecodeRecvData:237 -| recv data type...
+    5: ./exe() [0x40a057]
+    4: ./exe() [0x40a502]
+    3: ./exe() [0x403fab]
+    2: ./exe() [0x402acc]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7fd2789b1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7fd277fa603d]
+[INFO ] 20191108_150211 DecodeRecvData:432 -| End DecodeRecvData.
+    5: ./exe() [0x40a057]
+    4: ./exe() [0x40a502]
+    3: ./exe() [0x404b50]
+    2: ./exe() [0x402acc]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7fd2789b1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7fd277fa603d]
+[INFO ] 20191108_150220 th_RDWR:271 -| th_RDWR read data lens:32, data:0001000200030000001d001600040003
+
+    4: ./exe() [0x40a057]
+    3: ./exe() [0x40a502]
+    2: ./exe() [0x402ab5]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7fd2789b1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7fd277fa603d]
+[INFO ] 20191108_150220 DecodeRecvData:237 -| recv data type...
+    5: ./exe() [0x40a057]
+    4: ./exe() [0x40a502]
+    3: ./exe() [0x403fab]
+    2: ./exe() [0x402acc]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7fd2789b1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7fd277fa603d]
+[INFO ] 20191108_150220 DecodeRecvData:432 -| End DecodeRecvData.
+    5: ./exe() [0x40a057]
+    4: ./exe() [0x40a502]
+    3: ./exe() [0x404b50]
+    2: ./exe() [0x402acc]
+    1: /lib/x86_64-linux-gnu/libpthread.so.0(+0x8184) [0x7fd2789b1184]
+    0: /lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7fd277fa603d]

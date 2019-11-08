@@ -21,8 +21,8 @@ int DEV_CheckDevStatus(STATION_REQ * stationReq,char *result)
 	
 	statInfo->Bt_va = 99;
 	statInfo->Tem_val = 0x11;
-	statInfo->Dev_stat = 0x22;
-	statInfo->Ad_stat = 0x33;
+	statInfo->Dev_stat = 0x02;
+	statInfo->Ad_stat = 0x03;
 	sprintf(statInfo->Timestart, "00000000000000");
 	statInfo->Timework = 0x55;
 	statInfo->Version = 0x01;
